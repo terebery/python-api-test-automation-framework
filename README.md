@@ -1,2 +1,15 @@
-# python-api-test-automation-framework
-reusable API client for test framework
+#API Test Automation Framework
+
+Stack:
+Python
+pytest
+requests
+pytest-bdd
+jsonschema
+Allure reports
+
+Features:
+REST API testing
+BDD scenarios
+schema validation
+CI execution
