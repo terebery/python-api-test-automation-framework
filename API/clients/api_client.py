@@ -17,3 +17,6 @@ class APIClient:
 
     def delete(self, endpoint, headers=None):
         return requests.delete(f"{self.base_url}{endpoint}", headers=headers)
+
+    def get_response_time(self, endpoint, headers=None):
+        return requests.get(f"{self.base_url}{endpoint}", headers=headers).elapsed.total_seconds()

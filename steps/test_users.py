@@ -1,6 +1,11 @@
 import allure
-from pytest_bdd import scenario, parsers, given, when, then
 import logging
+import jsonschema
+from jsonschema import  validate
+from pytest_bdd import scenario, parsers, given, when, then
+from pytest_expect import expect
+
+from API.clients import api_client
 
 logger = logging.getLogger(__name__)
 
@@ -227,3 +232,94 @@ def check_nested_fields(context, key, field):
         body = context['response'].json()
         logger.info(f'Checking if "{key}" exists in body["{field}"]: {body.get(field)}')
         assert key in body[field]
+
+### TC_11 ###
+@scenario('../features/headers.feature', 'TC_11 - Response contains Content-Type')
+def test_check_response_contains_content_type():
+    pass
+
+@given('I send GET request to "/users/1"')
+def get_user1(context, api_client):
+    with allure.step('GET /users/1'):
+        context['response'] = api_client.get('/users/1')
+        logger.info(f'GET /users/1 | status: {context['response'].status_code}')
+
+@then('response header "Content-Type" should contain "charset=utf-8"')
+def header_is_charset(context):
+    with allure.step('Verify response header is "charset=utf-8"'):
+        content_type = context['response'].headers['content-type']
+        logger.info(f'Content-Type header: {content_type}')
+        assert 'charset' in content_type
+
+### TC_12 ###
+@scenario('../features/user.feature', 'TC_12 - Get user with invalid ID returns 404')
+def test_get_user_invalid_id_returns_404():
+    pass
+@given(parsers.parse('I send GET request to "/users/{invalid_id}"'))
+def get_user_by_invalid_id(context, api_client, invalid_id):
+    with allure.step('GET /users/{invalid_id}'):
+        context['response'] = api_client.get(f'/users/{invalid_id}')
+
+### TC_13 ###
+@scenario('../features/user.feature', 'TC_13 - Schema Validation')
+def test_validate_schema():
+    pass
+
+@then('user schema should contain fields "id, name, username, email"')
+def response_contains_fields(context):
+    with allure.step('Verify response contains id, name, username, email'):
+        body = context['response'].json()
+        logger.info(f'Verify response contains id, name, username, email: {body}')
+        assert "id" in body
+        assert "name" in body
+        assert "username" in body
+        assert "email" in body
+
+@then('response body should match user schema')
+def response_body_matches_schema(context):
+    with allure.step('Verify response body matches schema'):
+        body = context['response'].json()
+        logger.info(f'Verify response body matches schema: {body}')
+        exp_schema = {
+            "type": "object",
+            "properties": {
+            "id": {"type":"integer"},
+            "name": {"type": "string" },
+            "username": {"type": "string"},
+            "email": {"type":"string"},
+            }
+        }
+
+
+    try:
+        validate(instance=body, schema=exp_schema)
+        logger.info("Schema validation passed")
+
+    except jsonschema.exceptions.ValidationError as e:
+        logger.error(f'Schema validation failed. Error: {e.message}')
+        raise
+
+@scenario('../features/user.feature', 'TC_14 - Performance Baseline')
+def test_performance_baseline():
+    pass
+@when('user tries to get one existing user')
+def get_one_user():
+    with allure.step('Get single user data'):
+        pass
+@then('response time is less than 1000ms')
+def response_time_single_user(api_client):
+        with allure.step('Checking response time is less than 1500ms'):
+            response_time = api_client.get_response_time('/users/1')
+            logger.info(f'Response time: {response_time}, Expected: 1500ms = 1s')
+            assert response_time < 1
+
+@when('user tries to get all users')
+def get_all_user():
+    with allure.step('Get single user data'):
+        pass
+@then('response time is less than 2000ms')
+def response_time_all_users(api_client):
+    with allure.step('Checking response time is less than 2000ms'):
+        response_time = api_client.get_response_time('/users')
+        logger.info(f'Response time: {response_time}, Expected: 2000ms = 2s')
+        assert response_time < 2

@@ -76,3 +76,29 @@ Feature: User
         |key| field|
         |city| address|
         |name| company|
+
+  Scenario Outline: TC_12 - Get user with invalid ID returns 404
+    Given I send GET request to "/users/<invalid_id>"
+    Then response status code shall contain 404
+    Examples:
+    |invalid_id|
+    |9999999   |
+    |404       |
+    |Eisenhower|
+    |-2        |
+    |0         |
+
+    Scenario: TC_13 - Schema Validation
+      Given I send GET request to "/users/1"
+      Then response status code shall contain 200
+      And response body should match user schema
+      And user schema should contain fields "id, name, username, email"
+
+  Scenario: TC_14 - Performance Baseline
+    Given  user reach the page
+    When user tries to get one existing user
+    Then response time is less than 1000ms
+    When user tries to get all users
+    Then response time is less than 2000ms
+
+  Scenario: TC_15 - Users List Structure validation
