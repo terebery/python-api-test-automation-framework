@@ -5,3 +5,4 @@ faker
 jsonschema
 allure-pytest
 python-dotenv
+pydantic
