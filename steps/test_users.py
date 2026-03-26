@@ -3,7 +3,7 @@ import logging
 import jsonschema
 from jsonschema import  validate
 from pytest_bdd import scenario, parsers, given, when, then
-from pytest_expect import expect
+
 
 from API.clients import api_client
 
