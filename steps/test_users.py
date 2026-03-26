@@ -244,6 +244,7 @@ def get_user1(context, api_client):
         context['response'] = api_client.get('/users/1')
         logger.info(f"GET /users/1 | status: {context['response'].status_code}")
 
+
 @then('response header "Content-Type" should contain "charset=utf-8"')
 def header_is_charset(context):
     with allure.step('Verify response header is "charset=utf-8"'):
