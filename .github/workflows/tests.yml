@@ -20,13 +20,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Ensure Allure plugins
-        run: pip install allure-pytest allure-pytest-bdd
-
-      - name: Verify Allure packages
-        run: |
-          python -m pip show allure-pytest
-          python -m pip show allure-pytest-bdd
+      - name: Verify Allure package
+        run: python -m pip show allure-pytest
 
       - name: Prepare allure results directory
         run: |
@@ -37,7 +32,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -vv -ra --alluredir=allure-results 2>&1 | tee pytest-output.log
+          pytest -vv -ra -p no:allure_pytest_bdd 2>&1 | tee pytest-output.log
           test ${PIPESTATUS[0]} -eq 0
 
       - name: Debug allure results content
