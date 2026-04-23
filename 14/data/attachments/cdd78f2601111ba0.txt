@@ -1,0 +1,5 @@
+INFO     test_users:test_users.py:385 Verify response for POST /users/1: {'id': 11}
+INFO     test_users:test_users.py:400 Verify response for PUT /users/1: {'id': 1, 'name': 'Brady', 'username': 'sagvdfs', 'email': 'bradytkachukcantread@gmail.com'}
+INFO     test_users:test_users.py:64 Response status code: 200
+INFO     test_users:test_users.py:406 Verify response for DELETE /users/1
+INFO     test_users:test_users.py:64 Response status code: 200
