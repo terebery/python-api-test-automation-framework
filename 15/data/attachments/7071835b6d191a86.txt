@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:37 User reached the page, context initialized
+INFO     test_users:test_users.py:204 DELETE /users/1 | status: 200
+INFO     test_users:test_users.py:78 Response status code: 200
+INFO     test_users:test_users.py:116 Response body: {}
