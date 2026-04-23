@@ -20,15 +20,42 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Ensure Allure plugins
+        run: pip install allure-pytest allure-pytest-bdd
+
+      - name: Verify Allure packages
+        run: |
+          python -m pip show allure-pytest
+          python -m pip show allure-pytest-bdd
+
+      - name: Prepare allure results directory
+        run: |
+          rm -rf allure-results
+          mkdir -p allure-results
+          echo "Environment=GitHub Actions" > allure-results/environment.properties
+          echo "Python=3.11" >> allure-results/environment.properties
+
       - name: Run tests
-        run: pytest --alluredir=allure-results
+        run: |
+          pytest -vv -ra --alluredir=allure-results 2>&1 | tee pytest-output.log
+          test ${PIPESTATUS[0]} -eq 0
+
+      - name: Debug allure results content
+        if: always()
+        run: |
+          echo "Allure files:" 
+          find allure-results -maxdepth 2 -type f | sort
+          echo "result.json count: $(find allure-results -name '*-result.json' | wc -l)"
+          echo "container.json count: $(find allure-results -name '*-container.json' | wc -l)"
 
       - name: Upload allure results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: allure-results
-          path: allure-results
+          path: |
+            allure-results
+            pytest-output.log
 
   deploy-report:
     runs-on: ubuntu-latest
