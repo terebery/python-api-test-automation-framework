@@ -237,7 +237,7 @@ def create_user_(context, api_client):
     with allure.step(f'User sends POST /users with minimal payload: {payload}'):
         context['response'] = api_client.post('/users', data=payload)
         logger.info(f'POST /users | payload: {payload} | status: {context["response"].status_code}')
-
+print(type('str'))
 
 ### TC_10 ###
 @allure.title('TC_10 - Checking nested fields')

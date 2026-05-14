@@ -1,29 +1,30 @@
-# 🧪 API Test Automation Framework
+# API Test Automation Framework
 
-A reusable Python-based API test automation framework built with pytest and BDD.
+A reusable Python-based API test automation framework built with `pytest` and BDD.
 
 [![API Tests](https://github.com/terebery/test-automation-framework/actions/workflows/tests.yml/badge.svg)](https://github.com/terebery/test-automation-framework/actions)
 [![Allure Report](https://img.shields.io/badge/Allure-Report-brightgreen)](https://terebery.github.io/test-automation-framework/)
-[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.13-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 📋 Stack
+## Stack
 
 | Tool | Purpose |
 |------|---------|
-| Python 3.11 | Core language |
+| Python 3.13+ | Core language |
 | pytest | Test runner |
 | requests | HTTP client |
 | pytest-bdd | BDD scenarios (Gherkin) |
 | jsonschema | JSON schema validation |
+| Poetry | Dependency management (`pyproject.toml`) |
 | Allure | Test reporting |
 | GitHub Actions | CI/CD |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 test-automation-framework/
 ├── API/
@@ -34,12 +35,13 @@ test-automation-framework/
 ├── steps/              # BDD step definitions
 ├── conftest.py         # Shared fixtures
 ├── pytest.ini          # Pytest configuration
-└── requirements.txt    # Dependencies
+├── pyproject.toml      # Project config and dependencies
+└── poetry.lock         # Locked dependency versions
 ```
 
 ---
 
-## ✅ Features
+## Features
 
 - REST API testing (GET, POST, PUT, DELETE)
 - BDD scenarios written in Gherkin
@@ -50,7 +52,7 @@ test-automation-framework/
 
 ---
 
-## 🚀 How to run locally
+## How to run locally
 
 **1. Clone the repo**
 ```bash
@@ -58,25 +60,45 @@ git clone https://github.com/terebery/test-automation-framework.git
 cd test-automation-framework
 ```
 
-**2. Install dependencies**
+**2. Install Poetry**
 ```bash
-pip install -r requirements.txt
+pip install poetry
 ```
 
-**3. Run tests**
+If `poetry` command is not available, reopen terminal and verify:
+
 ```bash
-pytest
+poetry --version
 ```
 
-**4. Generate Allure report**
+**3. Install dependencies from `pyproject.toml`**
+
 ```bash
-pytest --alluredir=allure-results
+poetry install
+```
+
+**4. Run tests**
+```bash
+poetry run pytest
+```
+
+**5. Generate Allure report**
+```bash
+poetry run pytest
 allure serve allure-results
+```
+
+> `pytest.ini` already configures `--alluredir=allure-results`, so no extra flag is needed.
+
+## Optional: export `requirements.txt` for external CI/tools
+
+```bash
+poetry export -f requirements.txt --output requirements.txt --without-hashes
 ```
 
 ---
 
-## 📊 Test Report
+## Test Report
 
 Live Allure report available here:
 👉 [View Allure Report](https://terebery.github.io/test-automation-framework/)
